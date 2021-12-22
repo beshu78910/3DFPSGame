@@ -6,11 +6,13 @@ public class EnemyAttack : MonoBehaviour
 {
     // Start is called before the first frame update
     PlayerHealth target;
-    [SerializeField] private float damage = 40f; 
+    [SerializeField] private float damage = 40f;
+    private AudioSource attackSound;
 
  void Start()
  {
      target = FindObjectOfType<PlayerHealth>();
+     attackSound = GetComponent<AudioSource>();
  }
  public void OnDamageTaken()
  {
@@ -20,7 +22,8 @@ public class EnemyAttack : MonoBehaviour
  {
      if (target == null) return;
      target.TakeDamage(damage);
-     Debug.Log("bang bang");
+     target.GetComponent<DisplayDamage>().ShowDamageImpact();
+     attackSound.Play();
  }
  
 }

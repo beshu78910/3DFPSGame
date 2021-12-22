@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using Random = System.Random;
 
 public class Weapon : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] GameObject hitEffect;
     [SerializeField] Ammo ammoSlot;
     [SerializeField]  float timeBetweenShots = 0.5f;
+    [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] AudioSource pistolShot;
   
     [SerializeField] AmmoType ammoType;
 
@@ -23,10 +27,24 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
+        DisplayAmmo();
         if (Input.GetMouseButtonDown(0) && canShoot == true)
         {
             StartCoroutine(Shoot());
+            
         }
+    }
+
+    private void Start()
+    {
+        pistolShot = GetComponent<AudioSource>();
+    }
+
+
+    private void DisplayAmmo()
+    {
+        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+        ammoText.text = currentAmmo.ToString();
     }
     
     IEnumerator Shoot()
@@ -37,6 +55,7 @@ public class Weapon : MonoBehaviour
             PlayMuzzleFlash();
             ProcessRaycast();
             ammoSlot.ReduceCurrentAmmo(ammoType);
+            pistolShot.Play();
         }
     
         yield return new WaitForSeconds(timeBetweenShots);
